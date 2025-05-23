@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from schemas.todo import TodoCreate, TodoOut
 from models.todos import Todo
 from models.users import User
-from database import get_session
+from database.connection import get_session
 from sqlmodel import Session
 from auth.protected import get_current_user
 

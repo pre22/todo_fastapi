@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from database import get_session
+from database.connection import get_session
 from models.users import User
 from models.todos import Todo
 from sqlmodel import Session, select

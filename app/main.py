@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from app.routes import auth as auth_routes
-from app.routes import todos as todo_routes
-from app.admin import router as admin_router
-from app.websocket import router as ws_router
-from app.database import init_db
+from routes import auth as auth_routes
+from routes import todos as todo_routes
+from admin import router as admin_router
+from websocket import router as ws_router
+from database.connection import init_db
 from middleware import log_middleware
 
 
