@@ -14,7 +14,7 @@ init_db()
 # Register router
 app.include_router(auth_routes.router, prefix="/auth")
 app.include_router(todo_routes.router, prefix="/todos")
-app.include_router(admin_router)
+app.include_router(admin_router, prefix="/admin")
 app.include_router(ws_router)
 
 # Register Middleware
