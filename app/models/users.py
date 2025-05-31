@@ -15,7 +15,7 @@ class User(Base):
     username: Mapped[Optional[str] | None]
 
     addresses = Mapped[List["Address"]] = relationship(back_populates="user")
-    todos = Mapped[List["Todo"]] = relationship(back_populates="user")
+    todos = Mapped[List["Todo"]] = relationship(back_populates="user", cascode="all, delete-orphan")
 
     def __repr__(self):
         return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
