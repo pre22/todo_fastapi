@@ -1,17 +1,56 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, DeclarativeBase
-from decouple import config
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
-DATABASE_URL  = "sqlite:///./todo.db"
 
+from config import settings
+
+# For SQLite (or other databases)
+SQLALCHEMY_DATABASE_URL = settings.database_url
+
+# For async databases (PostgreSQL, MySQL)
+ASYNC_SQLALCHEMY_DATABASE_URL = settings.async_database_url
+
+# Synchronous engine (for SQLite, development)
 engine = create_engine(
-    DATABASE_URL,
-    pool_size=20,
-    max_overflow=10,
-    echo=config("echo", default=False)
-),
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},  # SQLite specific
+    echo=True  # Log SQL queries (disable in production)
+)
 
-connection = engine.connect()
+# Async engine (for production databases)
+async_engine = create_async_engine(
+    ASYNC_SQLALCHEMY_DATABASE_URL,
+    echo=True
+)
+
+
+# Session factories
+SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
+AsyncSessionLocal = sessionmaker(
+    bind=async_engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
+
+
+# Dependency
+def init_db():
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# Async dependency
+async def get_async_db():
+    async with AsyncSessionLocal() as db:
+        yield db
+
+
+
 
 
 class Base(DeclarativeBase):
