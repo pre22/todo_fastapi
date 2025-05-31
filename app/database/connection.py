@@ -1,12 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, DeclarativeBase
+from decouple import config
 
 DATABASE_URL  = "sqlite:///./todo.db"
 
 engine = create_engine(
-    DATABASE_URL, 
-    echo=True
-)
+    DATABASE_URL,
+    pool_size=20,
+    max_overflow=10,
+    echo=config("echo", default=False)
+),
 
 connection = engine.connect()
 
