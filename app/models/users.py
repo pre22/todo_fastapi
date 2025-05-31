@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.connection import Base
+from models.todos import Todo
 
 
 class User(Base):
@@ -14,6 +15,7 @@ class User(Base):
     username: Mapped[Optional[str] | None]
 
     addresses = Mapped[List["Address"]] = relationship(back_populates="user")
+    todos = Mapped[List["Todo"]] = relationship(back_populates="user")
 
     def __repr__(self):
         return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
