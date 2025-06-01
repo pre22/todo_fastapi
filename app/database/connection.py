@@ -12,7 +12,7 @@ SQLALCHEMY_DATABASE_URL = settings.database_url
 ASYNC_SQLALCHEMY_DATABASE_URL = settings.async_database_url
 
 # Synchronous engine (for SQLite, development)
-engine = create_engine(
+sync_engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args={"check_same_thread": False},  # SQLite specific
     echo=True  # Log SQL queries (disable in production)
@@ -26,7 +26,8 @@ async_engine = create_async_engine(
 
 
 # Session factories
-SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
+SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=sync_engine)
+
 AsyncSessionLocal = sessionmaker(
     bind=async_engine,
     class_=AsyncSession,
@@ -34,10 +35,9 @@ AsyncSessionLocal = sessionmaker(
 )
 
 
-# Dependency
-def get_db():
+# Sync Dependency
+def get_sync_db():
     db = SessionLocal()
-
     try:
         yield db
     finally:
@@ -47,7 +47,13 @@ def get_db():
 # Async dependency
 async def get_async_db():
     async with AsyncSessionLocal() as db:
-        yield db
+        try:
+            yield db
+        finally:
+            await db.close()
+
+
+
 
 
 
