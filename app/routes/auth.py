@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from schemas.users import UserCreate
 from models.users import User
 from database.connection import get_session
-from sqlmodel import Session, select
 from passlib.context import CryptContext
 from auth.jwt import create_access_token
 

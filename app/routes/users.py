@@ -11,7 +11,7 @@ from crud.users import get_user_by_email, create_user
 from auth.dependencies import get_current_active_user
 from auth.utils import verify_password, create_access_token
 from config import settings
-from database.connection import get_db
+from database.connection import get_sync_db
 
 from models import todos as tmodels
 from models.users import User
@@ -20,7 +20,7 @@ router = APIRouter()
 
 
 @router.post("/", response_model=User)
-def create_user(user: UserCreate, db=Depends(get_db)):
+def create_user(user: UserCreate, db=Depends(get_sync_db)):
     db_user = get_user_by_email(db, email=user.email)
 
     if db_user:
@@ -34,7 +34,7 @@ def read_user_me(current_user: User = Depends(get_current_active_user)):
 
 @router.post("/token")
 def login_for_access_token(
-    db=Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
+    db=Depends(get_sync_db), form_data: OAuth2PasswordRequestForm = Depends()
 ):
     user = get_user_by_email(db, email=form_data.username)
 

@@ -8,7 +8,7 @@ from schemas.todo import TodoCreate, Todo, TodoUpdate
 from crud.todo import create_todo as ct, get_todo, get_todos, update_todo as ut, delete_todo as dt
 
 from auth.dependencies import get_current_active_user
-from database.connection import get_db, get_async_db
+from database.connection import get_sync_db, get_async_db
 
 from models import todos as tmodels
 from models.users import User
