@@ -3,9 +3,7 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from schemas.todo import TodoCreate, Todo, TodoUpdate
 from schemas.users import UserCreate
-from crud.todo import create_todo, get_todo, get_todos, update_todo as ut, delete_todo as dt
 from crud.users import get_user_by_email, create_user
 
 from auth.dependencies import get_current_active_user
