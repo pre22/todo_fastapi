@@ -11,7 +11,6 @@ from auth.utils import verify_password, create_access_token
 from config import settings
 from database.connection import get_sync_db
 
-from models import todos as tmodels
 from models.users import User
 
 router = APIRouter()
