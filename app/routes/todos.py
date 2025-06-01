@@ -2,13 +2,13 @@ from uuid import UUID
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemas.todo import TodoCreate, Todo, TodoUpdate
-from schemas.users import UserCreate
-from crud.todo import create_todo, get_todo, get_todos, update_todo as ut, delete_todo as dt
+from crud.todo import create_todo as ct, get_todo, get_todos, update_todo as ut, delete_todo as dt
 
 from auth.dependencies import get_current_active_user
-from database.connection import get_db
+from database.connection import get_db, get_async_db
 
 from models import todos as tmodels
 from models.users import User
@@ -18,17 +18,17 @@ router = APIRouter()
 @router.post("/", response_model=Todo)
 def create_todo(
     todo: TodoCreate,
-    db=Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    return create_todo(db=db, todo=todo, user_id=current_user.id)
+    return ct(db=db, todo=todo, user_id=current_user.id)
 
 
 @router.get("/", response_model=List[Todo])
 def read_todos(
     skip: int = 0,
     limit: int = 100,
-    db=Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
     todos = get_todos(db, skip=skip, limit=limit)
@@ -38,7 +38,7 @@ def read_todos(
 @router.get("/{todo_id}", response_model=Todo)
 def read_todo(
     todo_id: UUID,
-    db=Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
     todo = get_todo(db, todo_id=todo_id)
@@ -54,7 +54,7 @@ def read_todo(
 def update_todo(
     todo_id: UUID,
     todo: TodoUpdate,
-    db=Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
     db_todo = get_todo(db, todo_id=todo_id)
@@ -69,7 +69,7 @@ def update_todo(
 @router.delete("/{todo_id}", response_model=Todo)
 def delete_todo(
     todo_id: UUID,
-    db=Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
     db_todo = get_todo(db, todo_id=todo_id)
