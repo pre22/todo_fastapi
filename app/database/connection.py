@@ -35,7 +35,7 @@ AsyncSessionLocal = sessionmaker(
 
 
 # Dependency
-def init_db():
+def get_db():
     db = SessionLocal()
 
     try:
