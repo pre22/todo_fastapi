@@ -5,7 +5,7 @@ from routes import auth as auth_routes
 from routes import todos as todo_routes
 from admin import router as admin_router
 from websocket import router as ws_router
-from database.connection import get_db, async_engine, Base
+from database.connection import async_engine, Base
 from config import settings
 
 
