@@ -41,3 +41,8 @@ async def get_current_active_user(
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive User")
     return current_user
+
+async def require_admin(user: User = Depends(get_current_user)):
+    if user.role != "admin":
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+    return user
