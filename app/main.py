@@ -5,7 +5,7 @@ from routes import auth as auth_routes
 from routes import todos as todo_routes
 from admin import router as admin_router
 from websocket import router as ws_router
-from database.connection import get_db
+from database.connection import get_db, async_engine, Base
 from config import settings
 
 
@@ -18,8 +18,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-# Init DB
-get_db()
+
+
+async def startup():
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
 
 # Register router
 app.include_router(auth_routes.router, prefix="/auth")
