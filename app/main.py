@@ -11,7 +11,6 @@ from config import settings
 from contextlib import asynccontextmanager
 from decouple import Config as cfg
 
-from routes import auth as auth_routes
 from routes import todos as todo_routes
 from admin import router as admin_router
 from websocket import router as ws_router
@@ -75,7 +74,6 @@ app.add_middleware(
 
 
 # Register router
-app.include_router(auth_routes.router, prefix="/auth")
 app.include_router(todo_routes.router, prefix="/todos")
 app.include_router(admin_router, prefix="/admin")
 app.include_router(ws_router)
